@@ -17,8 +17,8 @@ OUTPUT_FILE=${TMPDIR:-/tmp}/workout.mp3
 RAMP_UP_SOUND=~/rampup.wav
 CHILL_DOWN_SOUND=~/cooldown.wav
 
-SLOW_DURATION=60
-FAST_DURATION=150
+SLOW_DURATION=55
+FAST_DURATION=155
 TOTAL_DURATION=$(( 30 * 60 ))
 
 # # # #
@@ -59,7 +59,7 @@ done
 
 print_timed $TOTAL_DURATION end
 
-CMDLINE="$CMDLINE \"$OUTPUT_FILE\" earwax fade 0 $TOTAL_DURATION 10"
+CMDLINE="$CMDLINE \"$OUTPUT_FILE\" fade 0 $TOTAL_DURATION 10"
 
 echo "now running:"
 echo "$CMDLINE"
