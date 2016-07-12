@@ -47,6 +47,8 @@ fi
 # start with a slow period, first change is a ramp up
 TIME=$SLOW_DURATION
 TYPE=slow
+TOTAL_SLOW=$SLOW_DURATION
+TOTAL_FAST=0
 
 CMDLINE="sox -S --multi-threaded -m -v 0.7 \"|sox --combine sequence"
 for FILE in "$@"; do
@@ -60,15 +62,33 @@ while [ $TIME -lt $TOTAL_DURATION ]; do
 	CMDLINE="$CMDLINE \"|sox \\\"$RAMP_UP_SOUND\\\" -c 2 -r 44100 -p pad $TIME gain 4\""  # remix 1,1 ?
 	TYPE=fast
 	let TIME=$TIME+$FAST_DURATION
+	let TOTAL_FAST=$TOTAL_FAST+$FAST_DURATION
     else
 	print_timed $TIME slowdown
 	CMDLINE="$CMDLINE \"|sox \\\"$CHILL_DOWN_SOUND\\\" -c 2 -r 44100 -p pad $TIME gain 5\""  # remix 1,1 ?
 	TYPE=slow
 	let TIME=$TIME+$SLOW_DURATION
+	let TOTAL_SLOW=$TOTAL_SLOW+$SLOW_DURATION
     fi
 done
 
+if [ $TIME -gt $TOTAL_DURATION ]; then
+    let OVERSHOOT=$TIME-$TOTAL_DURATION
+    if [ $TYPE = slow ]; then
+	let TOTAL_FAST=$TOTAL_FAST-$OVERSHOOT
+    else
+	let TOTAL_SLOW=$TOTAL_SLOW-$OVERSHOOT
+    fi
+fi
+
 print_timed $TOTAL_DURATION end
+
+echo
+
+print_timed $TOTAL_SLOW total slow time
+print_timed $TOTAL_FAST total fast time
+echo
+
 
 CMDLINE="$CMDLINE \"$OUTPUT_FILE\" fade 0 $TOTAL_DURATION 10"
 
