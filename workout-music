@@ -35,12 +35,18 @@ print_timed() {
 
 # # # #
 
-if [ "$1" = '-n' ]; then
-    PRETEND_MODE=yes
-    shift
-else
-    PRETEND_MODE=no
-fi
+PRETEND_MODE=no
+while getopts 'n' opt; do
+    case $opt in
+	n)
+	    PRETEND_MODE=yes
+	    ;;
+	\?)
+	    exit 1
+	    ;;
+    esac
+done
+shift $((OPTIND-1)) # set $@ to everything after the options
 
 # # # #
 
