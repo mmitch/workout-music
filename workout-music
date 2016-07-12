@@ -33,6 +33,17 @@ print_timed() {
     printf "%02d:%02d:%02d %s\n" $HOUR $MIN $SEC "$*"
 }
 
+# # # #
+
+if [ "$1" = '-n' ]; then
+    PRETEND_MODE=yes
+    shift
+else
+    PRETEND_MODE=no
+fi
+
+# # # #
+
 # start with a slow period, first change is a ramp up
 TIME=$SLOW_DURATION
 TYPE=slow
@@ -60,6 +71,12 @@ done
 print_timed $TOTAL_DURATION end
 
 CMDLINE="$CMDLINE \"$OUTPUT_FILE\" fade 0 $TOTAL_DURATION 10"
+
+if [ $PRETEND_MODE = yes ]; then
+    echo "the following commandline would be run:"
+    echo "$CMDLINE"
+    exit
+fi
 
 echo "now running:"
 echo "$CMDLINE"
