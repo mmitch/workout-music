@@ -7,7 +7,8 @@ cleanup() {
     BASEDIR=${TMPDIR:-/tmp}/workout-music-unittest
     set -- $BASEDIR-*
     if [ "$1" != "$BASEDIR-*" ]; then
-	echo cleaning up test directories
+	echo
+	echo $CYAN cleaning up test directories $RESET
 	rm -vr $BASEDIR-*
     fi
 }
@@ -16,6 +17,15 @@ trap cleanup ERR
 trap cleanup SIGTERM
 trap cleanup EXIT
 trap cleanup RETURN
+
+# setup colors
+if tput sgr0 >/dev/null 2>&1; then
+    CYAN=$(tput setaf 6)
+    RESET=$(tput sgr0)
+else
+    CYAN=
+    RESET=
+fi
 
 # TODO: switch to inotify-tools
 
@@ -34,8 +44,9 @@ while true; do
 
     if [ $CHANGED = yes ]; then
 	clear
+	echo -n $CYAN
 	date
-	echo 
+	echo $RESET
 	./test.sh || true
     fi
 
