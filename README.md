@@ -30,7 +30,7 @@ how to use
 
 ```
 usage:
-  workout-music [-n] [-o output] input [input [...]]
+  workout-music [options] input [input [...]]
 
 arguments:
   input      one or more input files
@@ -39,6 +39,7 @@ options:
   -n         make-believe mode:
              show what would be done, but don't really do it
   -o output  set output file (default: /tmp/workout.mp3)
+  -t total   set total time for generated soundtrack (unit: seconds)
 ```
 
 

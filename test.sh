@@ -145,6 +145,16 @@ status 'TEST: check changed output file'
 assert_content "$SYSERR" ''
 assert_contains "$SYSOUT" 'output file: dir/file'
 
+status 'TEST: check default length'
+"$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
+assert_content "$SYSERR" ''
+assert_contains "$SYSOUT" '00:30:00 end'
+
+status 'TEST: check changed output file'
+"$BIN" -n -t 100 >| "$SYSOUT" 2>| "$SYSERR"
+assert_content "$SYSERR" ''
+assert_contains "$SYSOUT" '00:01:40 end'
+
 
 #################################################################
 

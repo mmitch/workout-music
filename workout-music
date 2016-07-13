@@ -18,7 +18,7 @@ CHILL_DOWN_SOUND=~/cooldown.wav
 
 SLOW_DURATION=55
 FAST_DURATION=155
-TOTAL_DURATION=$(( 30 * 60 ))
+DEFAULT_TOTAL_DURATION=$(( 30 * 60 ))
 
 # # # #
 
@@ -36,15 +36,19 @@ print_timed() {
 
 PRETEND_MODE=no
 OUTPUT_FILE="$DEFAULT_OUTPUT_FILE"
+TOTAL_DURATION="$DEFAULT_TOTAL_DURATION"
 
 # # # #
-while getopts 'no:' opt; do
+while getopts 'no:t:' opt; do
     case $opt in
 	n)
 	    PRETEND_MODE=yes
 	    ;;
 	o)
 	    OUTPUT_FILE="$OPTARG"
+	    ;;
+	t)
+	    TOTAL_DURATION="$OPTARG"
 	    ;;
 	\?)
 	    exit 1
