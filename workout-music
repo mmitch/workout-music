@@ -17,7 +17,7 @@ RAMP_UP_SOUND=~/rampup.wav
 CHILL_DOWN_SOUND=~/cooldown.wav
 
 DEFAULT_SLOW_DURATION=55
-FAST_DURATION=155
+DEFAULT_FAST_DURATION=155
 DEFAULT_TOTAL_DURATION=$(( 30 * 60 ))
 
 # # # #
@@ -47,6 +47,7 @@ show_help() {
     echo "  -t total   set total time for generated soundtrack in seconds"
     echo "             (default: $DEFAULT_TOTAL_DURATION)"
     echo "  -s slow    set duration of slow phase in seconds (default: $DEFAULT_SLOW_DURATION)"
+    echo "  -f fast    set duration of fast phase in seconds (default: $DEFAULT_FAST_DURATION)"
 }
 
 # # # #   set defaults
@@ -55,9 +56,10 @@ PRETEND_MODE=no
 OUTPUT_FILE="$DEFAULT_OUTPUT_FILE"
 TOTAL_DURATION=$DEFAULT_TOTAL_DURATION
 SLOW_DURATION=$DEFAULT_SLOW_DURATION
+FAST_DURATION=$DEFAULT_FAST_DURATION
 
 # # # #
-while getopts 'hno:t:s:' opt; do
+while getopts 'hno:t:s:f:' opt; do
     case $opt in
 	h)
 	    show_help
@@ -74,6 +76,9 @@ while getopts 'hno:t:s:' opt; do
 	    ;;
 	s)
 	    SLOW_DURATION="$OPTARG"
+	    ;;
+	f)
+	    FAST_DURATION="$OPTARG"
 	    ;;
 	\?)
 	    exit 1

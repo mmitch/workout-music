@@ -177,6 +177,17 @@ assert_content "$SYSERR" ''
 assert_contains "$SYSOUT" '00:03:00 speedup'
 
 
+status 'TEST: check default fast time'
+"$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
+assert_content "$SYSERR" ''
+assert_contains "$SYSOUT" '00:03:30 slowdown'
+
+status 'TEST: check changed fast time'
+"$BIN" -n -f 5 >| "$SYSOUT" 2>| "$SYSERR"
+assert_content "$SYSERR" ''
+assert_contains "$SYSOUT" '00:01:00 slowdown'
+
+
 #################################################################
 
 status 'removing temporary directory'

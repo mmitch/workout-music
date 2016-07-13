@@ -43,6 +43,7 @@ options:
   -t total   set total time for generated soundtrack in seconds
              (default: 1800)
   -s slow    set duration of slow phase in seconds (default: 55)
+  -f fast    set duration of fast phase in seconds (default: 155)
 ```
 
 
