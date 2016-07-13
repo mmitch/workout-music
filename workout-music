@@ -10,8 +10,7 @@
 #   sox-workout.sh input_file [input_file [...]]
 #
 
-# TODO: use getopts instead of hardcoded values
-OUTPUT_FILE=${TMPDIR:-/tmp}/workout.mp3
+DEFAULT_OUTPUT_FILE=${TMPDIR:-/tmp}/workout.mp3
 
 # TODO: add per-file parameters like "-c 2" or "-c 2 -r 44100"
 RAMP_UP_SOUND=~/rampup.wav
@@ -33,13 +32,19 @@ print_timed() {
     printf "%02d:%02d:%02d %s\n" $HOUR $MIN $SEC "$*"
 }
 
-# # # #
+# # # #   set defaults
 
 PRETEND_MODE=no
-while getopts 'n' opt; do
+OUTPUT_FILE="$DEFAULT_OUTPUT_FILE"
+
+# # # #
+while getopts 'no:' opt; do
     case $opt in
 	n)
 	    PRETEND_MODE=yes
+	    ;;
+	o)
+	    OUTPUT_FILE="$OPTARG"
 	    ;;
 	\?)
 	    exit 1
@@ -49,6 +54,8 @@ done
 shift $((OPTIND-1)) # set $@ to everything after the options
 
 # # # #
+
+echo "output file: $OUTPUT_FILE"
 
 # start with a slow period, first change is a ramp up
 TIME=$SLOW_DURATION

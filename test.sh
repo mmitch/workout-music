@@ -117,7 +117,7 @@ assert_contains()
 	STATE='missing file'
     fi
     
-    do_assertion "checking file content \`…${TESTFILE/$DIR}'" "$STATE"
+    do_assertion "checking file content \`…${TESTFILE/$DIR}' for \`$EXPECTED'" "$STATE"
 }
 
 #################################################################
@@ -134,6 +134,16 @@ assert_content "$SYSERR" ''
 assert_contains "$SYSOUT" '00:30:00 end'
 assert_contains "$SYSOUT" '00:06:45 total slow time'
 assert_contains "$SYSOUT" '00:23:15 total fast time'
+
+status 'TEST: check default output file'
+"$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
+assert_content "$SYSERR" ''
+assert_contains "$SYSOUT" 'output file: /tmp/workout.mp3'
+
+status 'TEST: check changed output file'
+"$BIN" -n -o dir/file >| "$SYSOUT" 2>| "$SYSERR"
+assert_content "$SYSERR" ''
+assert_contains "$SYSOUT" 'output file: dir/file'
 
 
 #################################################################

@@ -30,15 +30,16 @@ how to use
 
 ```
 usage:
-  workout-music [-n] input [input [...]]
+  workout-music [-n] [-o output] input [input [...]]
+
+arguments:
+  input      one or more input files
 
 options:
   -n         make-believe mode:
              show what would be done, but don't really do it
+  -o output  set output file (default: /tmp/workout.mp3)
 ```
-
-The output will default to ``/tmp/workout.mp3``, this file will be
-overwritten every time.
 
 
 where to get it
