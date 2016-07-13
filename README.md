@@ -40,7 +40,9 @@ options:
   -n         make-believe mode:
              show what would be done, but don't really do it
   -o output  set output file (default: /tmp/workout.mp3)
-  -t total   set total time for generated soundtrack (unit: seconds)
+  -t total   set total time for generated soundtrack in seconds
+             (default: 1800)
+  -s slow    set duration of slow phase in seconds (default: 55)
 ```
 
 

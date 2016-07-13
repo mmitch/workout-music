@@ -16,7 +16,7 @@ DEFAULT_OUTPUT_FILE=${TMPDIR:-/tmp}/workout.mp3
 RAMP_UP_SOUND=~/rampup.wav
 CHILL_DOWN_SOUND=~/cooldown.wav
 
-SLOW_DURATION=55
+DEFAULT_SLOW_DURATION=55
 FAST_DURATION=155
 DEFAULT_TOTAL_DURATION=$(( 30 * 60 ))
 
@@ -46,16 +46,18 @@ show_help() {
     echo "  -o output  set output file (default: $DEFAULT_OUTPUT_FILE)"
     echo "  -t total   set total time for generated soundtrack in seconds"
     echo "             (default: $DEFAULT_TOTAL_DURATION)"
+    echo "  -s slow    set duration of slow phase in seconds (default: $DEFAULT_SLOW_DURATION)"
 }
 
 # # # #   set defaults
 
 PRETEND_MODE=no
 OUTPUT_FILE="$DEFAULT_OUTPUT_FILE"
-TOTAL_DURATION="$DEFAULT_TOTAL_DURATION"
+TOTAL_DURATION=$DEFAULT_TOTAL_DURATION
+SLOW_DURATION=$DEFAULT_SLOW_DURATION
 
 # # # #
-while getopts 'hno:t:' opt; do
+while getopts 'hno:t:s:' opt; do
     case $opt in
 	h)
 	    show_help
@@ -69,6 +71,9 @@ while getopts 'hno:t:' opt; do
 	    ;;
 	t)
 	    TOTAL_DURATION="$OPTARG"
+	    ;;
+	s)
+	    SLOW_DURATION="$OPTARG"
 	    ;;
 	\?)
 	    exit 1
