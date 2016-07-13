@@ -135,6 +135,14 @@ assert_contains "$SYSOUT" '00:30:00 end'
 assert_contains "$SYSOUT" '00:06:45 total slow time'
 assert_contains "$SYSOUT" '00:23:15 total fast time'
 
+status 'TEST: check help text'
+"$BIN" -h >| "$SYSOUT" 2>| "$SYSERR"
+assert_content "$SYSERR" ''
+assert_contains "$SYSOUT" 'usage:'
+assert_contains "$SYSOUT" 'workout-music'
+assert_contains "$SYSOUT" 'arguments:'
+assert_contains "$SYSOUT" 'options:'
+
 status 'TEST: check default output file'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
@@ -145,12 +153,12 @@ status 'TEST: check changed output file'
 assert_content "$SYSERR" ''
 assert_contains "$SYSOUT" 'output file: dir/file'
 
-status 'TEST: check default length'
+status 'TEST: check default total time'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
 assert_contains "$SYSOUT" '00:30:00 end'
 
-status 'TEST: check changed output file'
+status 'TEST: check changed total time'
 "$BIN" -n -t 100 >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
 assert_contains "$SYSOUT" '00:01:40 end'

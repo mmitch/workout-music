@@ -32,6 +32,22 @@ print_timed() {
     printf "%02d:%02d:%02d %s\n" $HOUR $MIN $SEC "$*"
 }
 
+show_help() {
+    echo "usage:"
+    echo "  workout-music [options] input [input [...]]"
+    echo ""
+    echo "arguments:"
+    echo "  input      one or more input files"
+    echo ""
+    echo "options:"
+    echo "  -h         show help"
+    echo "  -n         make-believe mode:"
+    echo "             show what would be done, but don't really do it"
+    echo "  -o output  set output file (default: $DEFAULT_OUTPUT_FILE)"
+    echo "  -t total   set total time for generated soundtrack in seconds"
+    echo "             (default: $DEFAULT_TOTAL_DURATION)"
+}
+
 # # # #   set defaults
 
 PRETEND_MODE=no
@@ -39,8 +55,12 @@ OUTPUT_FILE="$DEFAULT_OUTPUT_FILE"
 TOTAL_DURATION="$DEFAULT_TOTAL_DURATION"
 
 # # # #
-while getopts 'no:t:' opt; do
+while getopts 'hno:t:' opt; do
     case $opt in
+	h)
+	    show_help
+	    exit 0
+	    ;;
 	n)
 	    PRETEND_MODE=yes
 	    ;;

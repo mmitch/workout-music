@@ -36,6 +36,7 @@ arguments:
   input      one or more input files
 
 options:
+  -h         show help
   -n         make-believe mode:
              show what would be done, but don't really do it
   -o output  set output file (default: /tmp/workout.mp3)
