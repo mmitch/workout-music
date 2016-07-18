@@ -128,6 +128,16 @@ BIN=./workout-music
 SYSOUT="$DIR/sysout"
 SYSERR="$DIR/syserr"
 
+# set defaults (should match script)
+DEF_OUTPUT=/tmp/workout.mp3
+DEF_TOTAL=00:30:00
+DEF_FAST_FIRST=00:00:55
+# first slowdown = slow length + fast length
+DEF_SLOW_FIRST=00:03:30
+DEF_FAST_FILE=$HOME/rampup.wav
+DEF_SLOW_FILE=$HOME/cooldown.wav
+
+
 status 'TEST: check total calculations with default values'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
@@ -147,7 +157,7 @@ assert_contains "$SYSOUT" 'options:'
 status 'TEST: check default output file'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" 'output file: /tmp/workout.mp3'
+assert_contains "$SYSOUT" "output file: $DEF_OUTPUT"
 
 status 'TEST: check changed output file'
 "$BIN" -n -o dir/file >| "$SYSOUT" 2>| "$SYSERR"
@@ -158,7 +168,7 @@ assert_contains "$SYSOUT" 'output file: dir/file'
 status 'TEST: check default total time'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" '00:30:00 end'
+assert_contains "$SYSOUT" "$DEF_TOTAL end"
 
 status 'TEST: check changed total time'
 "$BIN" -n -t 100 >| "$SYSOUT" 2>| "$SYSERR"
@@ -169,7 +179,7 @@ assert_contains "$SYSOUT" '00:01:40 end'
 status 'TEST: check default slow time'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" '00:00:55 speedup'
+assert_contains "$SYSOUT" "$DEF_FAST_FIRST speedup"
 
 status 'TEST: check changed slow time'
 "$BIN" -n -s 180 >| "$SYSOUT" 2>| "$SYSERR"
@@ -180,7 +190,7 @@ assert_contains "$SYSOUT" '00:03:00 speedup'
 status 'TEST: check default fast time'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" '00:03:30 slowdown'
+assert_contains "$SYSOUT" "$DEF_SLOW_FIRST slowdown"
 
 status 'TEST: check changed fast time'
 "$BIN" -n -f 5 >| "$SYSOUT" 2>| "$SYSERR"
@@ -191,7 +201,7 @@ assert_contains "$SYSOUT" '00:01:00 slowdown'
 status 'TEST: check default speedup sound'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" "speedup sound: $HOME/rampup.wav"
+assert_contains "$SYSOUT" "speedup sound: $DEF_FAST_FILE"
 
 status 'TEST: check changed speedup sound'
 "$BIN" -n -F dir/fast >| "$SYSOUT" 2>| "$SYSERR"
@@ -202,7 +212,7 @@ assert_contains "$SYSOUT" "speedup sound: dir/fast"
 status 'TEST: check default cooldown sound'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" "cooldown sound: $HOME/cooldown.wav"
+assert_contains "$SYSOUT" "cooldown sound: $DEF_SLOW_FILE"
 
 status 'TEST: check changed cooldown sound'
 "$BIN" -n -S dir/slow >| "$SYSOUT" 2>| "$SYSERR"
