@@ -14,7 +14,7 @@ DEFAULT_OUTPUT_FILE=${TMPDIR:-/tmp}/workout.mp3
 
 # TODO: add per-file parameters like "-c 2" or "-c 2 -r 44100"
 DEFAULT_RAMP_UP_SOUND=~/rampup.wav
-CHILL_DOWN_SOUND=~/cooldown.wav
+DEFAULT_COOL_DOWN_SOUND=~/cooldown.wav
 
 DEFAULT_SLOW_DURATION=55
 DEFAULT_FAST_DURATION=155
@@ -49,7 +49,8 @@ show_help() {
     echo "             (default: $DEFAULT_TOTAL_DURATION)"
     echo "  -s slow    set duration of slow phase in seconds (default: $DEFAULT_SLOW_DURATION)"
     echo "  -f fast    set duration of fast phase in seconds (default: $DEFAULT_FAST_DURATION)"
-    echo "  -F file    set sound marker for fast phase (default: $DEFAULT_RAMP_UP_SOUND)"
+    echo "  -S file    set sound marker for slow phase start (default: $DEFAULT_COOL_DOWN_SOUND)"
+    echo "  -F file    set sound marker for fast phase start (default: $DEFAULT_RAMP_UP_SOUND)"
 }
 
 # # # #   set defaults
@@ -57,13 +58,14 @@ show_help() {
 PRETEND_MODE=no
 OUTPUT_FILE="$DEFAULT_OUTPUT_FILE"
 RAMP_UP_SOUND="$DEFAULT_RAMP_UP_SOUND"
+COOL_DOWN_SOUND="$DEFAULT_COOL_DOWN_SOUND"
 TOTAL_DURATION=$DEFAULT_TOTAL_DURATION
 SLOW_DURATION=$DEFAULT_SLOW_DURATION
 FAST_DURATION=$DEFAULT_FAST_DURATION
 
 
 # # # #
-while getopts 'hno:t:s:f:F:' opt; do
+while getopts 'hno:t:s:f:S:F:' opt; do
     case $opt in
 	h)
 	    show_help
@@ -84,6 +86,9 @@ while getopts 'hno:t:s:f:F:' opt; do
 	f)
 	    FAST_DURATION="$OPTARG"
 	    ;;
+	S)
+	    COOL_DOWN_SOUND="$OPTARG"
+	    ;;
 	F)
 	    RAMP_UP_SOUND="$OPTARG"
 	    ;;
@@ -98,6 +103,7 @@ shift $((OPTIND-1)) # set $@ to everything after the options
 
 echo "output file: $OUTPUT_FILE"
 echo "speedup sound: $RAMP_UP_SOUND"
+echo "cooldown sound: $COOL_DOWN_SOUND"
 
 # start with a slow period, first change is a ramp up
 TIME=$SLOW_DURATION
@@ -120,7 +126,7 @@ while [ $TIME -lt $TOTAL_DURATION ]; do
 	let TOTAL_FAST=$TOTAL_FAST+$FAST_DURATION
     else
 	print_timed $TIME slowdown
-	CMDLINE="$CMDLINE \"|sox \\\"$CHILL_DOWN_SOUND\\\" -c 2 -r 44100 -p pad $TIME gain 5\""  # remix 1,1 ?
+	CMDLINE="$CMDLINE \"|sox \\\"$COOL_DOWN_SOUND\\\" -c 2 -r 44100 -p pad $TIME gain 5\""  # remix 1,1 ?
 	TYPE=slow
 	let TIME=$TIME+$SLOW_DURATION
 	let TOTAL_SLOW=$TOTAL_SLOW+$SLOW_DURATION

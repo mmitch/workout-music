@@ -199,6 +199,16 @@ assert_content "$SYSERR" ''
 assert_contains "$SYSOUT" "speedup sound: dir/fast"
 
 
+status 'TEST: check default cooldown sound'
+"$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
+assert_content "$SYSERR" ''
+assert_contains "$SYSOUT" "cooldown sound: $HOME/cooldown.wav"
+
+status 'TEST: check changed cooldown sound'
+"$BIN" -n -S dir/slow >| "$SYSOUT" 2>| "$SYSERR"
+assert_content "$SYSERR" ''
+assert_contains "$SYSOUT" "cooldown sound: dir/slow"
+
 
 #################################################################
 
