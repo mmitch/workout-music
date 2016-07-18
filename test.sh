@@ -102,7 +102,7 @@ assert_content()
     do_assertion "checking file content \`…${TESTFILE/$DIR}'" "$STATE"
 }
 
-assert_contains()
+assert_regexp()
 {
     local TESTFILE="$1" EXPECTED="$2"
 
@@ -116,8 +116,26 @@ assert_contains()
     else
 	STATE='missing file'
     fi
-    
-    do_assertion "checking file content \`…${TESTFILE/$DIR}' for \`$EXPECTED'" "$STATE"
+
+    do_assertion "checking file content \`…${TESTFILE/$DIR}' for /$EXPECTED/" "$STATE"
+}
+
+assert_line()
+{
+    local TESTFILE="$1" EXPECTED="$2"
+
+    local STATE
+    if [ -e "$TESTFILE" ]; then
+	if grep -q "^$EXPECTED$" "$TESTFILE"; then
+	    STATE='OK'
+	else
+	    printf -v STATE "line \`%s' not found in file" "$EXPECTED"
+	fi
+    else
+	STATE='missing file'
+    fi
+
+    do_assertion "checking file content \`…${TESTFILE/$DIR}' for '$EXPECTED'" "$STATE"
 }
 
 #################################################################
@@ -143,88 +161,88 @@ DEF_SLOW_FILE=$HOME/cooldown.wav
 status 'TEST: check total calculations with default values'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" '00:30:00 end'
-assert_contains "$SYSOUT" '00:06:45 total slow time'
-assert_contains "$SYSOUT" '00:23:15 total fast time'
+assert_line "$SYSOUT" '00:30:00 end'
+assert_line "$SYSOUT" '00:06:45 total slow time'
+assert_line "$SYSOUT" '00:23:15 total fast time'
 
 status 'TEST: check help text'
 "$BIN" -h >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" 'usage:'
-assert_contains "$SYSOUT" 'workout-music'
-assert_contains "$SYSOUT" 'arguments:'
-assert_contains "$SYSOUT" 'options:'
-assert_contains "$SYSOUT" "default: $DEF_OUTPUT"
-assert_contains "$SYSOUT" "default: $DEF_SLOW_SECS"
-assert_contains "$SYSOUT" "default: $DEF_FAST_SECS"
-assert_contains "$SYSOUT" "default: $DEF_SLOW_FILE"
-assert_contains "$SYSOUT" "default: $DEF_FAST_FILE"
+assert_line "$SYSOUT" 'usage:'
+assert_regexp "$SYSOUT" 'workout-music'
+assert_line "$SYSOUT" 'arguments:'
+assert_line "$SYSOUT" 'options:'
+assert_regexp "$SYSOUT" "\(default: $DEF_OUTPUT\)"
+assert_regexp "$SYSOUT" "\(default: $DEF_SLOW_SECS\)"
+assert_regexp "$SYSOUT" "\(default: $DEF_FAST_SECS\)"
+assert_regexp "$SYSOUT" "\(default: $DEF_SLOW_FILE\)"
+assert_regexp "$SYSOUT" "\(default: $DEF_FAST_FILE\)"
 
 
 status 'TEST: check default output file'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" "output file: $DEF_OUTPUT"
+assert_line "$SYSOUT" "output file: $DEF_OUTPUT"
 
 status 'TEST: check changed output file'
 "$BIN" -n -o dir/file >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" 'output file: dir/file'
+assert_line "$SYSOUT" 'output file: dir/file'
 
 
 status 'TEST: check default total time'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" "$DEF_TOTAL end"
+assert_line "$SYSOUT" "$DEF_TOTAL end"
 
 status 'TEST: check changed total time'
 "$BIN" -n -t 100 >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" '00:01:40 end'
+assert_line "$SYSOUT" '00:01:40 end'
 
 
 status 'TEST: check default slow time'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" "$DEF_FAST_FIRST speedup"
+assert_line "$SYSOUT" "$DEF_FAST_FIRST speedup"
 
 status 'TEST: check changed slow time'
 "$BIN" -n -s 180 >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" '00:03:00 speedup'
+assert_line "$SYSOUT" '00:03:00 speedup'
 
 
 status 'TEST: check default fast time'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" "$DEF_SLOW_FIRST slowdown"
+assert_line "$SYSOUT" "$DEF_SLOW_FIRST slowdown"
 
 status 'TEST: check changed fast time'
 "$BIN" -n -f 5 >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" '00:01:00 slowdown'
+assert_line "$SYSOUT" '00:01:00 slowdown'
 
 
 status 'TEST: check default speedup sound'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" "speedup sound: $DEF_FAST_FILE"
+assert_line "$SYSOUT" "speedup sound: $DEF_FAST_FILE"
 
 status 'TEST: check changed speedup sound'
 "$BIN" -n -F dir/fast >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" "speedup sound: dir/fast"
+assert_line "$SYSOUT" "speedup sound: dir/fast"
 
 
 status 'TEST: check default cooldown sound'
 "$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" "cooldown sound: $DEF_SLOW_FILE"
+assert_line "$SYSOUT" "cooldown sound: $DEF_SLOW_FILE"
 
 status 'TEST: check changed cooldown sound'
 "$BIN" -n -S dir/slow >| "$SYSOUT" 2>| "$SYSERR"
 assert_content "$SYSERR" ''
-assert_contains "$SYSOUT" "cooldown sound: dir/slow"
+assert_line "$SYSOUT" "cooldown sound: dir/slow"
 
 
 #################################################################
