@@ -188,6 +188,18 @@ assert_content "$SYSERR" ''
 assert_contains "$SYSOUT" '00:01:00 slowdown'
 
 
+status 'TEST: check default speedup sound'
+"$BIN" -n >| "$SYSOUT" 2>| "$SYSERR"
+assert_content "$SYSERR" ''
+assert_contains "$SYSOUT" "speedup sound: $HOME/rampup.wav"
+
+status 'TEST: check changed speedup sound'
+"$BIN" -n -F dir/fast >| "$SYSOUT" 2>| "$SYSERR"
+assert_content "$SYSERR" ''
+assert_contains "$SYSOUT" "speedup sound: dir/fast"
+
+
+
 #################################################################
 
 status 'removing temporary directory'

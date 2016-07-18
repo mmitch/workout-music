@@ -13,12 +13,13 @@
 DEFAULT_OUTPUT_FILE=${TMPDIR:-/tmp}/workout.mp3
 
 # TODO: add per-file parameters like "-c 2" or "-c 2 -r 44100"
-RAMP_UP_SOUND=~/rampup.wav
+DEFAULT_RAMP_UP_SOUND=~/rampup.wav
 CHILL_DOWN_SOUND=~/cooldown.wav
 
 DEFAULT_SLOW_DURATION=55
 DEFAULT_FAST_DURATION=155
 DEFAULT_TOTAL_DURATION=$(( 30 * 60 ))
+
 
 # # # #
 
@@ -48,18 +49,21 @@ show_help() {
     echo "             (default: $DEFAULT_TOTAL_DURATION)"
     echo "  -s slow    set duration of slow phase in seconds (default: $DEFAULT_SLOW_DURATION)"
     echo "  -f fast    set duration of fast phase in seconds (default: $DEFAULT_FAST_DURATION)"
+    echo "  -F file    set sound marker for fast phase (default: $DEFAULT_RAMP_UP_SOUND)"
 }
 
 # # # #   set defaults
 
 PRETEND_MODE=no
 OUTPUT_FILE="$DEFAULT_OUTPUT_FILE"
+RAMP_UP_SOUND="$DEFAULT_RAMP_UP_SOUND"
 TOTAL_DURATION=$DEFAULT_TOTAL_DURATION
 SLOW_DURATION=$DEFAULT_SLOW_DURATION
 FAST_DURATION=$DEFAULT_FAST_DURATION
 
+
 # # # #
-while getopts 'hno:t:s:f:' opt; do
+while getopts 'hno:t:s:f:F:' opt; do
     case $opt in
 	h)
 	    show_help
@@ -80,6 +84,9 @@ while getopts 'hno:t:s:f:' opt; do
 	f)
 	    FAST_DURATION="$OPTARG"
 	    ;;
+	F)
+	    RAMP_UP_SOUND="$OPTARG"
+	    ;;
 	\?)
 	    exit 1
 	    ;;
@@ -90,6 +97,7 @@ shift $((OPTIND-1)) # set $@ to everything after the options
 # # # #
 
 echo "output file: $OUTPUT_FILE"
+echo "speedup sound: $RAMP_UP_SOUND"
 
 # start with a slow period, first change is a ramp up
 TIME=$SLOW_DURATION
