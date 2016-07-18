@@ -131,6 +131,8 @@ SYSERR="$DIR/syserr"
 # set defaults (should match script)
 DEF_OUTPUT=/tmp/workout.mp3
 DEF_TOTAL=00:30:00
+DEF_SLOW_SECS=55
+DEF_FAST_SECS=155
 DEF_FAST_FIRST=00:00:55
 # first slowdown = slow length + fast length
 DEF_SLOW_FIRST=00:03:30
@@ -152,6 +154,11 @@ assert_contains "$SYSOUT" 'usage:'
 assert_contains "$SYSOUT" 'workout-music'
 assert_contains "$SYSOUT" 'arguments:'
 assert_contains "$SYSOUT" 'options:'
+assert_contains "$SYSOUT" "default: $DEF_OUTPUT"
+assert_contains "$SYSOUT" "default: $DEF_SLOW_SECS"
+assert_contains "$SYSOUT" "default: $DEF_FAST_SECS"
+assert_contains "$SYSOUT" "default: $DEF_SLOW_FILE"
+assert_contains "$SYSOUT" "default: $DEF_FAST_FILE"
 
 
 status 'TEST: check default output file'
