@@ -44,6 +44,8 @@ options:
              (default: 1800)
   -s slow    set duration of slow phase in seconds (default: 55)
   -f fast    set duration of fast phase in seconds (default: 155)
+  -S file    set sound marker for slow phase start (default: ~/cooldown.wav)
+  -F file    set sound marker for fast phase start (default: ~/rampup.wav)
 ```
 
 
